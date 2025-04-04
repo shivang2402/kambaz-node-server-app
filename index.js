@@ -15,11 +15,30 @@ import EnrollmentRoutes from "./Kambaz/Enrollments/routes.js";
 
 const app = express();
 
-// CORS config to support cookies and restrict to frontend
+// // CORS config to support cookies and restrict to frontend
+// app.use(cors({
+//   credentials: true,
+//   origin: process.env.NETLIFY_URL || "http://localhost:5173"
+// }));
+
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://kambaz-react-web.netlify.app"
+];
+
 app.use(cors({
-  credentials: true,
-  origin: process.env.NETLIFY_URL || "http://localhost:5173"
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
+
 
 app.use(express.json()); 
 
